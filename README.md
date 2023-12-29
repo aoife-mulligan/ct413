@@ -1,6 +1,6 @@
 # CT413
 
-### What is this repository?
+### What is in this repository?
 
 This repository contains code used for my Final Year Project CT413. The project aims to create a machine learning model to estimate sleep quality based on daily habits.
 
