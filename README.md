@@ -6,4 +6,4 @@ This repository contains code used for my Final Year Project CT413. The project 
 
 ### What is the purpose of this repository?
 
-This repository will serve as a method of version control for my project, and will aid in tracking progress and task management.
+This repository will serve as a method of version control for my project, and will aid in tracking progress and task management for the programming elements of my project.
