@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-
 import Logo from '../../../assets/images/logos_bright/SleepSense_transparent.png'
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
+import SocialSignInButton from '../../components/SocialSignInButton';
 // import secure text entry from react-native
 
 
@@ -18,14 +19,6 @@ const SignInScreen: React.FC = () => {
 
     const forgotPasswordPressed = () => {
         console.warn('Forgot Password Pressed!');
-    }
-
-    const onSignInGoogle = () => {
-        console.warn('Sign In with Google Pressed!');
-    }
-
-    const onSignInFacebook = () => {
-        console.warn('Sign In with Facebook Pressed!');
     }
 
     const onSignUpPressed = () => {
@@ -65,21 +58,7 @@ const SignInScreen: React.FC = () => {
                     type="TERTIARY"
                 />
 
-                <CustomButton 
-                    text="Sign In with Google" 
-                    onPress={onSignInGoogle}
-                    type="PRIMARY"
-                    bgColor='#FAE9EA'
-                    fgColor='#DB4437'
-                />
-
-                <CustomButton 
-                    text="Sign In with Facebook" 
-                    onPress={onSignInFacebook}
-                    type="PRIMARY"
-                    bgColor='#E7EAF4'
-                    fgColor='#3B5998'
-                />
+                <SocialSignInButton />
 
                 <CustomButton 
                     text="Don't have an account? Create one!" 
