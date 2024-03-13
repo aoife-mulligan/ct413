@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "677716899583",
+    "project_id": "directed-linker-416919",
+    "storage_bucket": "directed-linker-416919.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677716899583:android:24dc2068e09a19d32e7eca",
+        "android_client_info": {
+          "package_name": "com.sleepestimatorapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677716899583-crq7n2dp0mehc9qrfvos1jhiqd5udgro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sleepestimatorapp",
+            "certificate_hash": "d907cb6072e89c775962a2e3ff34c729332b4528"
+          }
+        },
+        {
+          "client_id": "677716899583-99aq5grog7q45u8d2cae6bohj9vm9l52.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCImExyj6TjOi2iKmwSr-QtHmgcJ2yaesk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677716899583-99aq5grog7q45u8d2cae6bohj9vm9l52.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

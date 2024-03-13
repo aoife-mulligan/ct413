@@ -1,31 +1,73 @@
 import React, {useState} from 'react';
-import { View, StyleSheet, useWindowDimensions, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, ScrollView, Text, ToastAndroid } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButton';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../navigation';
+import auth from '@react-native-firebase/auth';
 // import secure text entry from react-native
 
 
 const SignUpScreen: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [username, setUsername] = useState<string|null>('');
+    const [password, setPassword] = useState<string|null>('');
+    const [email, setEmail] = useState<string|null>('');
+    const [confirmPassword, setConfirmPassword] = useState<string|null>('');
+
+    const emailregex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    const navigation = useNavigation();
 
     const onCreateAccountPressed = () => {
-        console.warn('Create Account Pressed!');
-    }
+        if (!email && !password && !username && !confirmPassword) {
+            ToastAndroid.show('Please fill out all fields', ToastAndroid.LONG);
+        } else if (password && confirmPassword && password !== confirmPassword) {
+            ToastAndroid.show('Passwords do not match', ToastAndroid.LONG);
+        } else if (password && password.length < 6) {
+            ToastAndroid.show('Password must be at least 6 characters', ToastAndroid.LONG);
+        } else if (username && username.length < 6) {
+            ToastAndroid.show('Username must be at least 6 characters', ToastAndroid.LONG);
+        } else if (email && email.length < 6 && !emailregex.test(email)) {
+            ToastAndroid.show('Email must be at least 6 characters', ToastAndroid.LONG);
+        }        
+        else if (email && password){
+            console.warn('Create Account Pressed!');
+
+            auth()
+                .createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    ToastAndroid.show('Account Created!', ToastAndroid.LONG);
+            })
+            .catch((error: { message: string; }) => {
+                ToastAndroid.show(error.message, ToastAndroid.LONG);
+                console.error(error);
+            });
+
+            navigation.navigate('Home');
+        }
+
+    };
+
     
     const onSignInPressed = () => {
         console.warn('Sign In Pressed!');
+
+        navigation.navigate('SignIn');
     }
 
     const onTermsOfServicePress = () => {
         console.warn('Terms of Service Pressed!');
+
+        // navigate to terms of service
+        navigation.navigate('TermsOfService');
     }
 
     const onPrivacyPolicyPress = () => {
         console.warn('Privacy Policy Pressed!');
+
+        // navigate to privacy policy
+        navigation.navigate('PrivacyPolicy');
     }
 
 

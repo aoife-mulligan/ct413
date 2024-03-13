@@ -1,33 +1,53 @@
 import React, {useState} from 'react';
-import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { View, Image, StyleSheet, useWindowDimensions, ScrollView, ToastAndroid } from 'react-native';
 import Logo from '../../../assets/images/logos_bright/SleepSense_transparent.png'
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButton from '../../components/SocialSignInButton';
-// import secure text entry from react-native
-
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
 
 const SignInScreen: React.FC = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
 
     const {height} = useWindowDimensions();
+    const navigation = useNavigation();
 
     const onSignInPressed = () => {
+
         console.warn('Sign In Pressed!');
+
+        if (!password && !email) {
+            ToastAndroid.show('Please fill out all fields', ToastAndroid.LONG);
+        } else if (email && password){
+            auth()
+                .signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    ToastAndroid.show('Signed In!', ToastAndroid.LONG);
+                    console.log("Email on HomeScreen:", email);
+                    navigation.navigate('Home', { email });
+                })
+                .catch((error: { message: string; }) => {
+                    ToastAndroid.show(error.message, ToastAndroid.LONG);
+                    console.error(error);
+                });
+        }
     }
 
     const forgotPasswordPressed = () => {
         console.warn('Forgot Password Pressed!');
+        navigation.navigate('ForgotPassword');
     }
 
     const onSignUpPressed = () => {
         console.warn('Sign Up Pressed!');
+        navigation.navigate('SignUp');
     }
 
     return (
         <ScrollView>
-            <View>
+            <View style={styles.root}>
                 <Image source={Logo}
                 style={[styles.logo, {height: height * 0.3}]}
                 resizeMode="contain"
@@ -35,8 +55,8 @@ const SignInScreen: React.FC = () => {
 
                 <CustomInput 
                     placeholder="Username" 
-                    value={username} 
-                    setValue={setUsername}
+                    value={email} 
+                    setValue={setEmail}
                     secureTextEntry={false}
                 />
                 <CustomInput 

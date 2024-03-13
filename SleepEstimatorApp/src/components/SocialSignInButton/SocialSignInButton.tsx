@@ -25,14 +25,6 @@ const SocialSignInButtons: React.FC<SocialSignInButtonsProps> = (props) => {
                     bgColor='#FAE9EA'
                     fgColor='#DB4437'
                 />
-
-                <CustomButton 
-                    text="Sign In with Facebook" 
-                    onPress={onSignInFacebook}
-                    type="PRIMARY"
-                    bgColor='#E7EAF4'
-                    fgColor='#3B5998'
-                />
         </>
     );
 };

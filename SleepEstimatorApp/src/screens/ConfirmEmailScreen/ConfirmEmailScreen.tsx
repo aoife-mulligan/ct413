@@ -3,22 +3,33 @@ import { View, StyleSheet, useWindowDimensions, ScrollView, Text } from 'react-n
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButton';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 const ConfirmEmailScreen: React.FC = () => {
     const [code, setCode] = useState('');
 
+    const navigation = useNavigation();
+
     const onConfirmPressed = () => {
         console.warn('Confirm Pressed!');
+
+        //navigate to home
+        navigation.navigate('Home');
+        
     }
 
     const onSignInPressed = () => {
         console.warn('Sign In Pressed!');
+
+        navigation.navigate('SignIn');
     }
 
     const onResendPressed = () => {
         console.warn('Resend Code Pressed!');
+
+        //resend code
     }
 
     return (

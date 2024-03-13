@@ -2,18 +2,26 @@ import React, { useState } from 'react';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 
 const ResetPasswordScreen: React.FC = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const navigation = useNavigation();
+
+
     const onResetPassword = () => {
         console.warn('Reset Password Pressed!');
+
+        navigation.navigate('SignIn');
     };
 
     const onSignInPressed = () => {
         console.warn('Sign In Pressed!');
+
+        navigation.navigate('SignIn');
     };
 
     return (
