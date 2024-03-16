@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@react-navigation/native": "^6.1.15",
+    "react-native-safe-area-context": "^4.9.0"
+  }
+}
