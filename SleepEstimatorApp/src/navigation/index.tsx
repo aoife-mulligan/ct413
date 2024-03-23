@@ -14,16 +14,17 @@ import HomeScreen from '../screens/HomeScreen';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
 import TermsOfService from '../screens/TermsOfService';
 import { User } from 'firebase/auth';
+import SurveyScreen from '../screens/SurveyScreen';
+import LogDataScreen from '../screens/LogDataScreen/LogDataScreen';
+import { useAuth } from '../components/hooks/AuthContext';
 
-interface NavigationProps {
-    user: User | null;
-}
 
 enableScreens();
 
 const Stack = createStackNavigator();
 
-const Navigation: React.FC<NavigationProps> = ({ user }) => {
+const Navigation: React.FC = () => {
+    const { user } = useAuth();
     return (
         <Stack.Navigator
             initialRouteName={user ? "HomeScreen" : "SignInScreen"}
@@ -36,6 +37,8 @@ const Navigation: React.FC<NavigationProps> = ({ user }) => {
             {user ? (
                 <>
                     <Stack.Screen name="Home" component={HomeScreen} />
+                    <Stack.Screen name="SurveyScreen" component={SurveyScreen} />
+                    <Stack.Screen name="LogDataScreen" component={LogDataScreen} />
                     {/* Add other screens that should be accessible after sign in */}
                 </>
             ) : (

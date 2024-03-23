@@ -6,6 +6,7 @@ import CustomButton from '../../components/CustomButton';
 import SocialSignInButton from '../../components/SocialSignInButton';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const SignInScreen: React.FC = () => {
     const [email, setEmail] = useState<string>('');
@@ -26,7 +27,7 @@ const SignInScreen: React.FC = () => {
                 .then(() => {
                     ToastAndroid.show('Signed In!', ToastAndroid.LONG);
                     console.log("Email on HomeScreen:", email);
-                    navigation.navigate('Home', { email });
+                    navigation.navigate('Home');
                 })
                 .catch((error: { message: string; }) => {
                     ToastAndroid.show(error.message, ToastAndroid.LONG);
@@ -70,13 +71,16 @@ const SignInScreen: React.FC = () => {
                     text="Sign In" 
                     onPress={onSignInPressed}
                     type="PRIMARY"
+                    icon={<Icon name="login" size={20} color="#FBFBF2" />}
                 />
-
+                {/*}
                 <CustomButton 
                     text="Forgot Password?" 
                     onPress={forgotPasswordPressed}
                     type="TERTIARY"
+                    icon={<Icon name="lock-reset" size={20} color="#FBFBF2" />}
                 />
+                */}
 
                 <SocialSignInButton />
 
@@ -84,6 +88,7 @@ const SignInScreen: React.FC = () => {
                     text="Don't have an account? Create one!" 
                     onPress={onSignUpPressed}
                     type="TERTIARY"
+                    icon={<Icon name="account-plus" size={20} color="#FBFBF2" />}
                 />
             </View>
         </ScrollView>

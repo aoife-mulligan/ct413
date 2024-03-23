@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable,View, StyleSheet, Text } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface CustomButtonProps {
     text: string;
@@ -6,6 +7,7 @@ interface CustomButtonProps {
     type?: 'PRIMARY' | 'SECONDARY' | 'TERTIARY';
     bgColor?: string;
     fgColor?: string;
+    icon?: JSX.Element;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -14,6 +16,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     type = "PRIMARY",
     bgColor,
     fgColor,
+    icon,
   }) => {
     return (
       <Pressable
@@ -24,9 +27,12 @@ const CustomButton: React.FC<CustomButtonProps> = ({
           bgColor ? { backgroundColor: bgColor } : {},
         ]}
       >
-        <Text style={[styles.text, styles[`text_${type}`], fgColor ? { color: fgColor } : {}]}>
-          {text}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                {icon && <View style={styles.icon}>{icon}</View>}
+                <Text style={[styles.text, styles[`text_${type}`], fgColor ? { color: fgColor } : {}]}>
+                    {text}
+                </Text>
+            </View>
       </Pressable>
     );
   };
@@ -37,32 +43,40 @@ const styles = StyleSheet.create({
         padding: 15,
         alignSelf: 'center',
         alignItems: 'center',
-        borderRadius: 5,
+        borderRadius: 100,
         marginVertical: 10,
     },
     text: {
         fontWeight: 'bold',
+        fontSize: 18,
+    },
+    icon: {
+        marginRight: 30,
     },
 
     container_PRIMARY: {
-        backgroundColor: '#3B71F3',
+        backgroundColor: '#8B88F8',
     },
     container_SECONDARY: {
-        borderColor: '#3B71F3',
-        borderWidth: 1,
+        borderColor: '#8B88F8',
+        borderWidth: 2,
 
     },
-    container_TERTIARY: {},
+    container_TERTIARY: {
+        width: '70%',
+        padding: 15,
+    },
 
     text_PRIMARY: {
-        color: 'white',
+        color: '#FBFBF2',
     },
     text_SECONDARY: {
-        color: '#3B71F3',
+        color: '#8B88F8',
     },
     text_TERTIARY: {
         color: '#FBFBF2',
         fontWeight: 'normal',
+        textAlign: 'center',
     },
 });
 

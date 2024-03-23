@@ -6,10 +6,20 @@ import SocialSignInButtons from '../../components/SocialSignInButton';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../navigation';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 // import secure text entry from react-native
 
+interface FirebaseError extends Error {
+    code?: string;
+}
 
 const SignUpScreen: React.FC = () => {
+
+    const db = firestore();
+
+
     const [username, setUsername] = useState<string|null>('');
     const [password, setPassword] = useState<string|null>('');
     const [email, setEmail] = useState<string|null>('');
@@ -20,34 +30,48 @@ const SignUpScreen: React.FC = () => {
     const navigation = useNavigation();
 
     const onCreateAccountPressed = () => {
-        if (!email && !password && !username && !confirmPassword) {
+        if (!email || !password || !username || !confirmPassword) {
             ToastAndroid.show('Please fill out all fields', ToastAndroid.LONG);
-        } else if (password && confirmPassword && password !== confirmPassword) {
+        } else if (password !== confirmPassword) {
             ToastAndroid.show('Passwords do not match', ToastAndroid.LONG);
-        } else if (password && password.length < 6) {
-            ToastAndroid.show('Password must be at least 6 characters', ToastAndroid.LONG);
-        } else if (username && username.length < 6) {
-            ToastAndroid.show('Username must be at least 6 characters', ToastAndroid.LONG);
-        } else if (email && email.length < 6 && !emailregex.test(email)) {
-            ToastAndroid.show('Email must be at least 6 characters', ToastAndroid.LONG);
-        }        
-        else if (email && password){
+        } else if (username.length < 6) {
+            ToastAndroid.show('Username must be at least 3 characters', ToastAndroid.LONG);
+        } else if (!emailregex.test(email)) {
+            ToastAndroid.show('Please enter a valid email', ToastAndroid.LONG);
+        } else {
             console.warn('Create Account Pressed!');
-
+        
             auth()
                 .createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    ToastAndroid.show('Account Created!', ToastAndroid.LONG);
-            })
-            .catch((error: { message: string; }) => {
-                ToastAndroid.show(error.message, ToastAndroid.LONG);
-                console.error(error);
-            });
-
-            navigation.navigate('Home');
+                .then((userCredential) => {
+                    // User is signed in, now create a user document
+                    const uid = userCredential.user.uid;
+                    db.collection('users').doc(uid).set({
+                        username: username,
+                        email: email,
+                    })
+                    .then(() => {
+                        ToastAndroid.show('Account Created and User added to Firestore!', ToastAndroid.LONG);
+                        navigation.navigate('Home', { email });
+                    })
+                    .catch((error: Error) => {
+                        ToastAndroid.show('Failed to add user to Firestore: ' + error.message, ToastAndroid.LONG);
+                    });
+                })
+                .catch((error: FirebaseError) => {
+                    if (error.code === 'auth/email-already-in-use') {
+                      ToastAndroid.show('That email address is already in use!', ToastAndroid.LONG);
+                    } else if (error.code === 'auth/invalid-email') {
+                      ToastAndroid.show('That email address is invalid!', ToastAndroid.LONG);
+                    } else {
+                      ToastAndroid.show(error.message, ToastAndroid.LONG);
+                    }
+                    console.error(error);
+                });
         }
-
     };
+    
+    
 
     
     const onSignInPressed = () => {
@@ -104,6 +128,7 @@ const SignUpScreen: React.FC = () => {
                     text="Create Account" 
                     onPress={onCreateAccountPressed}
                     type="PRIMARY"
+                    icon={<Icon name="account-plus" size={20} color="#FBFBF2" />}
                 />
 
                 <SocialSignInButtons />
@@ -118,6 +143,7 @@ const SignUpScreen: React.FC = () => {
                     text="Already have an account? Sign In here!" 
                     onPress={onSignInPressed}
                     type="TERTIARY"
+                    icon={<Icon name="login" size={20} color="#FBFBF2" />}
                 />
             </View>
         </ScrollView>
