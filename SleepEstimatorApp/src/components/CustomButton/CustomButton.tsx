@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     icon: {
-        marginRight: 30,
+        position: 'relative',
+        marginRight: 10,
     },
-
     container_PRIMARY: {
         backgroundColor: '#8B88F8',
     },

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { View, Image, StyleSheet, useWindowDimensions, ScrollView, ToastAndroid } from 'react-native';
-import Logo from '../../../assets/images/logos_bright/SleepSense_transparent.png'
+import Logo from '../../../assets/images/logo/KnowYourNightLogo.png'
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButton from '../../components/SocialSignInButton';
@@ -50,7 +50,7 @@ const SignInScreen: React.FC = () => {
         <ScrollView>
             <View style={styles.root}>
                 <Image source={Logo}
-                style={[styles.logo, {height: height * 0.3}]}
+                style={[styles.logo, {height: height * 0.4}]}
                 resizeMode="contain"
                 />
 
@@ -59,12 +59,14 @@ const SignInScreen: React.FC = () => {
                     value={email} 
                     setValue={setEmail}
                     secureTextEntry={false}
+                    icon={<Icon name="account-outline" size={20} color="#FBFBF2" />}
                 />
                 <CustomInput 
                     placeholder="Password" 
                     value={password} 
                     setValue={setPassword}
                     secureTextEntry={true}
+                    icon={<Icon name="lock-outline" size={20} color="#FBFBF2" />}
                 />
 
                 <CustomButton 

@@ -1,15 +1,19 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface CustomInputProps extends TextInputProps {
     value: string;
     setValue: (value: string) => void;
     placeholder: string;
+    icon?: JSX.Element;
+    secureTextEntry?: boolean;
 }
 
-const CustomInput: React.FC<CustomInputProps> = ({ value, setValue, placeholder, secureTextEntry }) => {
+const CustomInput: React.FC<CustomInputProps> = ({ value, setValue, placeholder, secureTextEntry, icon}) => {
     return (
         <View style={styles.container}>
+            {icon && <View style={styles.icon}>{icon}</View>}
             <TextInput
                 value={value}
                 onChangeText={setValue}
@@ -28,13 +32,20 @@ const styles = StyleSheet.create({
         width: '80%',
         borderColor: '#424B54',
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 100,
         paddingHorizontal: 10,
         marginVertical: 10,
         alignSelf: 'center',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     input: {
         color: 'white',
+        flex: 1,
+    },
+    icon: {
+        position: 'relative',
+        marginRight: 10,
     },
 });
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButton from '../../components/CustomButton';
@@ -8,19 +8,44 @@ import firestore from '@react-native-firebase/firestore'; // Import Firestore
 import SurveyQuestionBox from '../../components/SurveyQuestionBox.tsx';
 import LogDataBox from '../../components/LogDataBox/LogDataBox.tsx';
 import { useAuth } from '../../components/hooks/AuthContext';
+import PredictionDisplay from '../../components/PredictionDisplay/PredictionDisplay.tsx';
 
 const HomeScreen: React.FC = () => {
     const navigation = useNavigation();
-    const { user } = useAuth(); // Use the useAuth hook here
-    const userEmail = user?.email; // Get the email from the user object
+    const { user } = useAuth();
+    const userEmail = user?.email;
+    const [username, setUsername] = useState<string | null>(null);
 
-    if (!user) {
-        useEffect(() => {
+
+    useEffect(() => {
+        if (!user) {
             navigation.navigate('SignIn');
-        }, []);
-        // Return null or a loading spinner until the effect runs
-        return null;
-    }
+            return;
+        }
+
+        const fetchUsername = async () => {
+            const currentUserUID = user.uid;
+            const userDocRef = firestore().collection('users').doc(currentUserUID);
+            
+            try {
+                const doc = await userDocRef.get();
+                if (doc.exists) {
+                    const userData = doc.data();
+                    if(userData) {
+                        setUsername(userData.username);
+                    } else {
+                        console.log("Document data is undefined.");
+                    }
+                } else {
+                    console.log("No such document!");
+                }
+            } catch (error) {
+                console.error("Error getting document:", error);
+            }
+        };
+
+        fetchUsername();
+    }, [user, navigation]);
 
     const db = firestore();
 
@@ -73,7 +98,9 @@ const HomeScreen: React.FC = () => {
 
     return (
         <ScrollView>
-            <Text style={styles.title}>Hello, {userEmail}!</Text>
+            <Text style={styles.title}>Hello, { username }!</Text>
+
+            <PredictionDisplay prediction="Your sleep score is 80%" />
 
             <CustomButton
                 text="Log Today's Data"

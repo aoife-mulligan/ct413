@@ -104,24 +104,28 @@ const SignUpScreen: React.FC = () => {
                     value={username} 
                     setValue={setUsername}
                     secureTextEntry={false}
+                    icon={<Icon name="account-circle-outline" size={20} color="#FBFBF2" />}
                 />
                 <CustomInput 
                     placeholder="E-mail Address" 
                     value={email} 
                     setValue={setEmail}
                     secureTextEntry={false}
+                    icon={<Icon name="email-outline" size={20} color="#FBFBF2" />}
                 />
                 <CustomInput 
                     placeholder="Password" 
                     value={password} 
                     setValue={setPassword}
                     secureTextEntry={true}
+                    icon={<Icon name="lock-outline" size={20} color="#FBFBF2" />}
                 />
                 <CustomInput 
                     placeholder="Confirm Password" 
                     value={confirmPassword} 
                     setValue={setConfirmPassword}
                     secureTextEntry={true}
+                    icon={<Icon name="lock-outline" size={20} color="#FBFBF2" />}
                 />
 
                 <CustomButton 

@@ -6,6 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import CustomButton from '../../components/CustomButton';
 import LogDataBox from '../../components/LogDataBox/LogDataBox';
 import { useAuth } from '../../components/hooks/AuthContext';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LogDataScreen: React.FC = () => {
     const navigation = useNavigation();
@@ -32,17 +33,21 @@ const [currentMetricEditing, setCurrentMetricEditing] = useState('');
 
 const updateFirestoreData = async (fieldName: MetricKeys, fieldValue: string) => {
     const currentUserUID = auth().currentUser?.uid;
+    const today = new Date().toISOString().split('T')[0]; //today's date in YYYY-MM-DD format
+
     if (currentUserUID) {
-      try {
-        await db.collection('users').doc(currentUserUID).set({
-          [fieldName]: fieldValue,
-        }, { merge: true });
-        console.log(`Data updated: ${fieldName} = ${fieldValue}`);
-      } catch (error) {
-        console.error(`Failed to update data: ${error}`);
-      }
+        //docId format: "UID_YYYY-MM-DD"
+        const docId = `${currentUserUID}_${today}`;
+        await db.collection('activityData').doc(docId).set({
+            userId: currentUserUID,
+            date: today,
+            [fieldName]: fieldValue,
+        }, { merge: true })
+        .then(() => console.log(`Data updated for ${today}: ${fieldName} = ${fieldValue}`))
+        .catch((error) => console.error(`Failed to update data for ${today}: ${error}`));
     }
 };
+
   
 
 useEffect(() => {
@@ -76,7 +81,7 @@ useEffect(() => {
 
 const promptForNewValue = (metricKey: keyof typeof metrics) => {
 setCurrentMetricEditing(metricKey);
-setTempValue(metrics[metricKey]); // TypeScript now knows metricKey is a valid key
+setTempValue(metrics[metricKey]);
 setIsModalVisible(true);
 };
 
@@ -105,8 +110,8 @@ return (
     {Object.entries(metrics).map(([metricKey, metricValue]) => (
     <LogDataBox
         key={metricKey}
-        type={metricKey as any} // Since the metricKey is assured to be correct, we assert it as any to satisfy TypeScript
-        value={metricValue} //get firestore value here
+        type={metricKey as any}
+        value={metricValue}
         onEdit={() => promptForNewValue(metricKey as "STEPS" | "HEART_RATE_MAX" | "HEART_RATE_MIN" | "HEART_RATE_AVG" | "DISTANCE" | "WEIGHT" | "HEIGHT")}
     />
     ))}
@@ -139,12 +144,14 @@ return (
         text="Back to Home"
         onPress={onBackToHomePressed}
         type="PRIMARY"
+        icon={<Icon name="home" size={20} color="#FBFBF2" />}
     />
 
     <CustomButton
     text="Sign Out"
     onPress={() => auth().signOut().then(() => navigation.navigate('SignIn'))}
     type="SECONDARY"
+    icon={<Icon name="logout" size={20} color="#8B88F8" />}
     />
 </ScrollView>
 );
@@ -196,6 +203,7 @@ modalText: {
 modalButton: {
     marginTop: 10,
     color: '#FBFBF2',
+    borderRadius: 100,
 },
 text: {
     fontSize: 20,

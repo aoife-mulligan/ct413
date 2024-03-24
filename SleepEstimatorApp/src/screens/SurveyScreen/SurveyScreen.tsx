@@ -38,22 +38,25 @@ const SurveyScreen: React.FC = () => {
     };
     
 
-    const saveUserResponse = (fieldName: string, fieldValue: string) => {
+    const saveUserResponse = (question: string, response: string) => {
         const currentUserUID = auth().currentUser?.uid;
     
         if (currentUserUID) {
-            const userDocRef = db.collection('users').doc(currentUserUID);
-            userDocRef.update({
-                [fieldName]: fieldValue
+            // Create a new document in the surveyresponses collection
+            db.collection('surveyresponses').add({
+                userId: currentUserUID,
+                question: question,
+                response: response,
+                createdAt: firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                console.log(`User response saved successfully for field ${fieldName}!`);
+                console.log(`Response to "${question}" saved successfully!`);
             }).catch((error) => {
-                console.error(`Error saving user response for field ${fieldName}:`, error);
+                console.error(`Error saving response to "${question}":`, error);
             });
         } else {
             console.error('Current user UID is not available.');
         }
-    }
+    };
     
 
     function onBackToHomePressed(): void {
