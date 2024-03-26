@@ -9,7 +9,6 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-// import secure text entry from react-native
 
 interface FirebaseError extends Error {
     code?: string;
@@ -34,7 +33,7 @@ const SignUpScreen: React.FC = () => {
             ToastAndroid.show('Please fill out all fields', ToastAndroid.LONG);
         } else if (password !== confirmPassword) {
             ToastAndroid.show('Passwords do not match', ToastAndroid.LONG);
-        } else if (username.length < 6) {
+        } else if (username.length < 3) {
             ToastAndroid.show('Username must be at least 3 characters', ToastAndroid.LONG);
         } else if (!emailregex.test(email)) {
             ToastAndroid.show('Please enter a valid email', ToastAndroid.LONG);
@@ -44,7 +43,6 @@ const SignUpScreen: React.FC = () => {
             auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // User is signed in, now create a user document
                     const uid = userCredential.user.uid;
                     db.collection('users').doc(uid).set({
                         username: username,
@@ -52,7 +50,7 @@ const SignUpScreen: React.FC = () => {
                     })
                     .then(() => {
                         ToastAndroid.show('Account Created and User added to Firestore!', ToastAndroid.LONG);
-                        navigation.navigate('Home', { email });
+                        navigation.navigate('Home');
                     })
                     .catch((error: Error) => {
                         ToastAndroid.show('Failed to add user to Firestore: ' + error.message, ToastAndroid.LONG);

@@ -15,6 +15,7 @@ const HomeScreen: React.FC = () => {
     const { user } = useAuth();
     const userEmail = user?.email;
     const [username, setUsername] = useState<string | null>(null);
+    const [prediction, setPrediction] = useState<number | null>(null);
 
 
     useEffect(() => {
@@ -32,6 +33,7 @@ const HomeScreen: React.FC = () => {
                 if (doc.exists) {
                     const userData = doc.data();
                     if(userData) {
+                        console.log("Setting username to: ", userData.username);
                         setUsername(userData.username);
                     } else {
                         console.log("Document data is undefined.");
@@ -45,6 +47,24 @@ const HomeScreen: React.FC = () => {
         };
 
         fetchUsername();
+        const fetchPrediction = async () => {
+            const predictionDocRef = firestore().collection('predictions').doc(user.uid);
+            
+            try {
+                const doc = await predictionDocRef.get();
+                if (doc.exists) {
+                    const predictionData = doc.data();
+                    const predictionValue = predictionData?.predictionValue ?? null;
+                    setPrediction(predictionValue);
+                } else {
+                    console.log("No prediction document found for the user.");
+                }
+            } catch (error) {
+                console.error("Error getting prediction document:", error);
+            }
+        };
+
+        fetchPrediction();
     }, [user, navigation]);
 
     const db = firestore();
@@ -61,6 +81,7 @@ const HomeScreen: React.FC = () => {
     }
 
     const onCompleteSurveyPressed = () => {
+        console.warn('Complete Survey Pressed!');
         navigation.navigate('SurveyScreen');
     }
 
@@ -68,14 +89,16 @@ const HomeScreen: React.FC = () => {
         const userEmail = auth().currentUser?.email;
     
         if (userEmail) {
-            // If userEmail exists, navigate and pass it to LogDataScreen
             navigation.navigate('LogDataScreen');
         } else {
-            // Handle the scenario where there is no user email available
             console.error('No user email found');
-            // For example, redirect to a login screen or show an alert
             navigation.navigate('SignIn');
         }
+    };
+
+    const onGeneratePredictionPressed = () => {
+        console.warn('Generate Prediction Pressed!');
+        navigation.navigate('GeneratePredictionScreen');
     };
 
     const saveUserResponse = (fieldName: string, fieldValue: string) => {
@@ -98,9 +121,9 @@ const HomeScreen: React.FC = () => {
 
     return (
         <ScrollView>
-            <Text style={styles.title}>Hello, { username }!</Text>
+            <Text style={styles.title}>Hello, {username ? username : "Loading..." }!</Text>
 
-            <PredictionDisplay prediction="Your sleep score is 80%" />
+            <PredictionDisplay prediction={prediction}/>
 
             <CustomButton
                 text="Log Today's Data"
@@ -111,6 +134,11 @@ const HomeScreen: React.FC = () => {
             <CustomButton
                 text="Complete Survey"
                 onPress={onCompleteSurveyPressed}
+                type="PRIMARY"
+            />
+            <CustomButton
+                text="Your Sleep Quality Prediction"
+                onPress={onGeneratePredictionPressed}
                 type="PRIMARY"
             />
 

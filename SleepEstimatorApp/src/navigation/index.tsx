@@ -17,6 +17,7 @@ import { User } from 'firebase/auth';
 import SurveyScreen from '../screens/SurveyScreen';
 import LogDataScreen from '../screens/LogDataScreen/LogDataScreen';
 import { useAuth } from '../components/hooks/AuthContext';
+import GeneratePredictionScreen from '../screens/GeneratePredictionScreen/GeneratePredictionScreen';
 
 
 enableScreens();
@@ -27,7 +28,7 @@ const Navigation: React.FC = () => {
     const { user } = useAuth();
     return (
         <Stack.Navigator
-            initialRouteName={user ? "HomeScreen" : "SignInScreen"}
+            initialRouteName={user ? "SignInScreen" : "SignInScreen"}
             screenOptions={{
                 headerShown: false,
                 cardStyle: { backgroundColor: '#262626' },
@@ -39,6 +40,7 @@ const Navigation: React.FC = () => {
                     <Stack.Screen name="Home" component={HomeScreen} />
                     <Stack.Screen name="SurveyScreen" component={SurveyScreen} />
                     <Stack.Screen name="LogDataScreen" component={LogDataScreen} />
+                    <Stack.Screen name="GeneratePredictionScreen" component={GeneratePredictionScreen} />
                     {/* Add other screens that should be accessible after sign in */}
                 </>
             ) : (
@@ -48,7 +50,6 @@ const Navigation: React.FC = () => {
                     <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
                     <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
                     <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-                    {/* Screens like PrivacyPolicy and TermsOfService might be accessible regardless of sign-in status */}
                     <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
                     <Stack.Screen name="TermsOfService" component={TermsOfService} />
                 </>

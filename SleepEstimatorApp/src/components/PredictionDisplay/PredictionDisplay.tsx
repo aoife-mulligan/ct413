@@ -1,35 +1,85 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { StyleSheet, View, Text } from 'react-native';
 
 interface PredictionDisplayProps {
-    prediction: string;
+    prediction: number | null;
 }
 
 const PredictionDisplay: React.FC<PredictionDisplayProps> = ({ prediction }) => {
-    return (
-        //scrollview with text displaying the prediction
-        <ScrollView>
-            <Text style={styles.text}>{prediction}</Text>
-        </ScrollView>
-    );
+    if (prediction !== null) {
+        const totalStars = 5;
+        const scaledPrediction = Math.round(prediction * 4 + 1);
+        const starRating = Math.round(scaledPrediction * 2) / 2;
+        const fullStars = Math.floor(starRating);
+        const emptyStars = totalStars - fullStars;
+
+        const goldStars = ' ★ '.repeat(fullStars);
+        const greyStars = ' ★ '.repeat(emptyStars);
+
+        let explanation = 'Your Sleep Quality Prediction...'
+
+        if (scaledPrediction == 1) {
+            explanation = 'Very Poor'
+        } else if (scaledPrediction == 2) {
+            explanation = 'Poor'
+        } else if (scaledPrediction == 3) {
+            explanation = 'Fair'
+        } else if (scaledPrediction == 4) {
+            explanation = 'Good'
+        } else if (scaledPrediction == 5) {
+            explanation = 'Very Good'
+        } else {
+            explanation = 'Unknown Sleep Quality \n Have you logged your data?'
+        }
+
+        return (
+            <View style={styles.container}>
+                <Text style={styles.text}>Prediction: {scaledPrediction}</Text>
+                <Text style={styles.text}>{explanation}</Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.goldStar}>{[goldStars]}</Text>
+                    <Text style={styles.greyStar}>{[greyStars]}</Text>
+                </View>
+            </View>
+        );
+    } else {
+        return <Text style={styles.smalltext}>No prediction available!</Text>;
+    }
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignSelf: 'center',
         justifyContent: 'center',
-        alignContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#262626',
+    },
+    smalltext: {
+        fontSize: 16,
+        color: '#FBFBF2',
+        padding: 20,
+        textAlign: 'center',
     },
     text: {
-        textAlign: 'center',
-        fontSize: 16,
+        fontSize: 24,
         fontWeight: 'bold',
-        margin: 16,
         color: '#FBFBF2',
+        padding: 20,
+        textAlign: 'center',
+    },
+    goldStar: {
+        fontSize: 50,
+        fontWeight: 'bold',
+        color: '#D4AF37', 
+        paddingBottom: 20,
+        paddingTop: 20,
+    },
+    greyStar: {
+        fontSize: 50,
+        fontWeight: 'bold',
+        color: '#4F4F4F',
+        paddingBottom: 20,
+        paddingTop: 20,
     },
 });
 

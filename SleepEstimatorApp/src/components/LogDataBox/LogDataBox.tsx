@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-// Define a type for the 'type' prop
 export type LogDataBoxType = 'STEPS' | 'HEART_RATE_MAX' | 'HEART_RATE_MIN' | 'HEART_RATE_AVG' | 'DISTANCE';
 
 interface LogDataBoxProps {
@@ -63,7 +62,6 @@ const styles = StyleSheet.create({
     color: '#FBFBF2',
     marginRight: 10,
   },
-  // Add the rest of your styles here
 });
 
 export default LogDataBox;

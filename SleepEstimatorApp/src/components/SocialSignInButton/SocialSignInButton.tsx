@@ -5,17 +5,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 interface SocialSignInButtonsProps {
-    // Define your props here
+    onSignInGoogle: () => void;
 }
 
 const SocialSignInButtons: React.FC<SocialSignInButtonsProps> = (props) => {
-    // Add your component logic here
     const onSignInGoogle = () => {
         console.warn('Sign In with Google Pressed!');
-    }
-
-    const onSignInFacebook = () => {
-        console.warn('Sign In with Facebook Pressed!');
     }
 
     return (

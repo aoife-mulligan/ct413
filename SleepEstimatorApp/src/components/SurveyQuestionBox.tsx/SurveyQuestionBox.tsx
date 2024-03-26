@@ -12,7 +12,7 @@ const SurveyQuestionBox: React.FC<Props> = ({ question, options, onSelectOption 
 
     const handleOptionSelection = (option: string) => {
         setSelectedOption(option);
-        onSelectOption(option); // Call the onSelectOption function with the selected option
+        onSelectOption(option);
     };
 
     return (

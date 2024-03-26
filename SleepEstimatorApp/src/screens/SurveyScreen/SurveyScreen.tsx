@@ -19,10 +19,9 @@ type Props = {
 
 const SurveyScreen: React.FC = () => {
     const navigation = useNavigation();
-    const { user } = useAuth(); // Get the user object from AuthContext
+    const { user } = useAuth(); 
     const db = firestore();
 
-    // You can access the user's email directly from the user object
     const userEmail = user?.email;
 
     const onSignOutPressed = () => {
@@ -42,7 +41,6 @@ const SurveyScreen: React.FC = () => {
         const currentUserUID = auth().currentUser?.uid;
     
         if (currentUserUID) {
-            // Create a new document in the surveyresponses collection
             db.collection('surveyresponses').add({
                 userId: currentUserUID,
                 question: question,
@@ -250,7 +248,7 @@ const SurveyScreen: React.FC = () => {
             <Text style={styles.text}>If you are not female, please select 'None of the above', for the following two quesitons.</Text>
             <SurveyQuestionBox
                 question="If you are female, do you or your doctor think that..."
-                options={['You may be going through peri-menopause (you have changes in your periods but have not gone 12 months in a row without a period)', 'You are postmenopausal', 'You are neither peri- or post-menopausal']}
+                options={['You may be going through peri-menopause (you have changes in your periods but have not gone 12 months in a row without a period)', 'You are postmenopausal', 'Neither/None of the above']}
                 onSelectOption={(response) => saveUserResponse('menopause', response)}
             />
             <SurveyQuestionBox

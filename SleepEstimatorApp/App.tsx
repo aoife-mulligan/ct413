@@ -7,7 +7,6 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import Navigation from './src/navigation';
 
 function App(): React.JSX.Element {
-  // No need for useState or useEffect hooks here anymore, AuthProvider will take care of it
 
   return (
     <NavigationContainer>
@@ -18,7 +17,6 @@ function App(): React.JSX.Element {
   );
 }
 
-export default App;
 
 const styles = StyleSheet.create({
   root: {
