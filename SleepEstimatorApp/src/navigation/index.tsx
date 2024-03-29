@@ -18,6 +18,7 @@ import SurveyScreen from '../screens/SurveyScreen';
 import LogDataScreen from '../screens/LogDataScreen/LogDataScreen';
 import { useAuth } from '../components/hooks/AuthContext';
 import GeneratePredictionScreen from '../screens/GeneratePredictionScreen/GeneratePredictionScreen';
+import ReccommendationsScreen from '../screens/ReccommendationsScreen';
 
 
 enableScreens();
@@ -28,7 +29,7 @@ const Navigation: React.FC = () => {
     const { user } = useAuth();
     return (
         <Stack.Navigator
-            initialRouteName={user ? "SignInScreen" : "SignInScreen"}
+            initialRouteName={user ? "SignIn" : "SignIn"}
             screenOptions={{
                 headerShown: false,
                 cardStyle: { backgroundColor: '#262626' },
@@ -41,6 +42,7 @@ const Navigation: React.FC = () => {
                     <Stack.Screen name="SurveyScreen" component={SurveyScreen} />
                     <Stack.Screen name="LogDataScreen" component={LogDataScreen} />
                     <Stack.Screen name="GeneratePredictionScreen" component={GeneratePredictionScreen} />
+                    <Stack.Screen name="ReccommendationsScreen" component={ReccommendationsScreen} />
                     {/* Add other screens that should be accessible after sign in */}
                 </>
             ) : (

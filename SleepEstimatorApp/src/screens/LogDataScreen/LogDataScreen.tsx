@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, Modal, TextInput, Button, Alert } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'; // import useRoute
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import CustomButton from '../../components/CustomButton';
@@ -10,10 +10,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LogDataScreen: React.FC = () => {
     const navigation = useNavigation();
-    const { user } = useAuth(); // Using useAuth hook to access user
-    const userEmail = user?.email; // Accessing the email from the user object
-  
+    const { user } = useAuth();
     const db = firestore();
+    const [username, setUsername] = useState<string | null>(null);
     const [metrics, setMetrics] = useState({
         STEPS: '0',
         HEART_RATE_MAX: '0',
@@ -23,28 +22,25 @@ const LogDataScreen: React.FC = () => {
         WEIGHT: '0',
         HEIGHT: '0',
     });
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [tempValue, setTempValue] = useState('');
+    const [currentMetricEditing, setCurrentMetricEditing] = useState('');
 
 type MetricKeys = 'STEPS' | 'HEART_RATE_MAX' | 'HEART_RATE_MIN' | 'HEART_RATE_AVG' | 'DISTANCE' | 'WEIGHT' | 'HEIGHT';
 
 
-const [isModalVisible, setIsModalVisible] = useState(false);
-const [tempValue, setTempValue] = useState('');
-const [currentMetricEditing, setCurrentMetricEditing] = useState('');
-
-const updateFirestoreData = async (fieldName: MetricKeys, fieldValue: string) => {
+const updateFirestoreData = async (fieldName: keyof typeof metrics, fieldValue: string) => {
     const currentUserUID = auth().currentUser?.uid;
-    const today = new Date().toISOString().split('T')[0]; //today's date in YYYY-MM-DD format
-
     if (currentUserUID) {
-        //docId format: "UID_YYYY-MM-DD"
+        const today = new Date().toISOString().split('T')[0]; 
         const docId = `${currentUserUID}_${today}`;
         await db.collection('activityData').doc(docId).set({
             userId: currentUserUID,
             date: today,
             [fieldName]: fieldValue,
         }, { merge: true })
-        .then(() => console.log(`Data updated for ${today}: ${fieldName} = ${fieldValue}`))
-        .catch((error) => console.error(`Failed to update data for ${today}: ${error}`));
+        .then(() => console.log(`Data updated: ${fieldName} = ${fieldValue}`))
+        .catch((error) => console.error(`Failed to update data: ${error}`));
     }
 };
 
@@ -52,60 +48,72 @@ const updateFirestoreData = async (fieldName: MetricKeys, fieldValue: string) =>
 
 useEffect(() => {
     const currentUserUID = auth().currentUser?.uid;
-    if (currentUserUID) {
-        db.collection('users').doc(currentUserUID).get().then((documentSnapshot) => {
-            if (documentSnapshot.exists) {
-                const data = documentSnapshot.data();
-                const keysToInclude: MetricKeys[] = ['STEPS', 'HEART_RATE_MAX', 'HEART_RATE_MIN', 'HEART_RATE_AVG', 'DISTANCE', 'WEIGHT', 'HEIGHT'];
-                
+
+    const fetchUsernameAndOtherData = async () => {
+        if (!user || !currentUserUID) {
+            navigation.navigate('SignIn');
+            return;
+        }
+
+        try {
+            const userDocRef = firestore().collection('users').doc(currentUserUID);
+            const doc = await userDocRef.get();
+            if (doc.exists) {
+                const userData = doc.data();
+                setUsername(userData?.username); // Set the username
+            } else {
+                console.log("No such document for username!");
+            }
+            
+            const metricsDoc = await db.collection('users').doc(currentUserUID).get();
+            if (metricsDoc.exists) {
+                const data = metricsDoc.data();
+                const keysToInclude = ['STEPS', 'HEART_RATE_MAX', 'HEART_RATE_MIN', 'HEART_RATE_AVG', 'DISTANCE', 'WEIGHT', 'HEIGHT'];
                 const filteredData = keysToInclude.reduce((acc, key) => {
-                    if (data && key in data) {
+                    if (data && data[key] !== undefined) {
                         acc[key] = data[key].toString();
                     }
                     return acc;
-                }, {} as Record<MetricKeys, string>);
-        
-                const newMetrics = {
-                    ...metrics,
-                    ...filteredData,
-                };
-                setMetrics(newMetrics);
+                }, {});
+                setMetrics(prevMetrics => ({ ...prevMetrics, ...filteredData }));
             }
-        }).catch((error) => {
-            console.error(`Failed to fetch user data: ${error}`);
-        });
-    }
-  }, []);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    };
+
+    fetchUsernameAndOtherData();
+}, [user, navigation]);
   
   
 
 const promptForNewValue = (metricKey: keyof typeof metrics) => {
-setCurrentMetricEditing(metricKey);
-setTempValue(metrics[metricKey]);
-setIsModalVisible(true);
+    setCurrentMetricEditing(metricKey);
+    setTempValue(metrics[metricKey]);
+    setIsModalVisible(true);
 };
 
 const handleSave = () => {
-if (currentMetricEditing && !isNaN(Number(tempValue))) {
-    const updatedMetrics = {
-    ...metrics,
-    [currentMetricEditing]: tempValue,
-    };
-    setMetrics(updatedMetrics);
-    updateFirestoreData(currentMetricEditing, tempValue);
-    setIsModalVisible(false);
-} else {
-    Alert.alert('Invalid Input', 'Please enter a numerical value.');
-}
+    if (currentMetricEditing && !isNaN(Number(tempValue))) {
+        const updatedMetrics = {
+            ...metrics,
+            [currentMetricEditing]: tempValue,
+        };
+        setMetrics(updatedMetrics);
+        updateFirestoreData(currentMetricEditing as any, tempValue);
+        setIsModalVisible(false);
+    } else {
+        Alert.alert('Invalid Input', 'Please enter a numerical value.');
+    }
 };
 
-function onBackToHomePressed(): void {
+const onBackToHomePressed = () => {
     navigation.navigate('Home');
-}
+};
 
 return (
 <ScrollView style={styles.root}>
-    <Text style={styles.title}>Edit Your Data, {userEmail}</Text>
+    <Text style={styles.title}>Edit Your Data, {username || "Loading..."}</Text>
 
     {Object.entries(metrics).map(([metricKey, metricValue]) => (
     <LogDataBox

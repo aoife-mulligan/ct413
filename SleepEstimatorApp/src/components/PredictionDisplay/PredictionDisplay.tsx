@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
@@ -6,6 +7,8 @@ interface PredictionDisplayProps {
 }
 
 const PredictionDisplay: React.FC<PredictionDisplayProps> = ({ prediction }) => {
+    const navigation = useNavigation();
+
     if (prediction !== null) {
         const totalStars = 5;
         const scaledPrediction = Math.round(prediction * 4 + 1);

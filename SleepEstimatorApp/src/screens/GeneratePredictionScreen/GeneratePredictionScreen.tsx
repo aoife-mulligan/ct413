@@ -127,6 +127,10 @@ const GeneratePredictionScreen: React.FC = () => {
   const onBackToHomePressed = () => {
     navigation.navigate('Home');
   };
+
+  const onReccommendationsPressed = () => {
+    navigation.navigate('ReccommendationsScreen');
+  };
   
     useEffect(() => {
       const loadTFAndModelAndPredict = async () => {
@@ -182,6 +186,11 @@ const GeneratePredictionScreen: React.FC = () => {
       <ScrollView>
         <Text style={styles.title}>Your Sleep Quality Prediction...</Text>
         <PredictionDisplay prediction={predictionValue} />
+        <CustomButton
+            text="See Your Reccommendations"
+            onPress={onReccommendationsPressed}
+            type='PRIMARY'
+        />
         <CustomButton
             text="Home"
             onPress={onBackToHomePressed}

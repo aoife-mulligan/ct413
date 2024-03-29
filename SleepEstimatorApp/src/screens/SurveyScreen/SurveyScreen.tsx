@@ -7,6 +7,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore'; // Import Firestore
 import SurveyQuestionBox from '../../components/SurveyQuestionBox.tsx';
 import { useAuth } from '../../components/hooks/AuthContext';
+import SurveyNumericQuestionBox from '../../components/SurveyNumericQuestionBox.tsx';
 
 type Props = {
     email: string;
@@ -77,10 +78,9 @@ const SurveyScreen: React.FC = () => {
                 options={['Very hard', 'Hard', 'Somewhat hard', 'Not very hard']}
                 onSelectOption={(response) => saveUserResponse('basic_expenses', response)}
             />
-            <SurveyQuestionBox
+            <SurveyNumericQuestionBox
                 question="Thinking about caffeinated beverages such as soda, coffee, energy drinks, and tea, how many cups (6-8 oz.) or cans (12 oz.) do you typically drink each day? Enter number of caffeinated beverages (cups/cans)"
-                options={['None', '1-7 drinks', '8-14 drinks', '15-21 drinks', '22-28 drinks', '29 or more drinks']}
-                onSelectOption={(response) => saveUserResponse('caffeine', response)}
+                onEnterValue={(response) => saveUserResponse('caffeine', response)}
             />
             <SurveyQuestionBox
                 question="What best describes your current main daily activities?"
@@ -122,7 +122,7 @@ const SurveyScreen: React.FC = () => {
                 question="Last year, what was your total household income from all sources, before taxes?" 
                 options={['Less than €9,500', '€9,500-46,500', '€46,500-93,000', '€93,000-139,000', '€139,000-185,500', '€185,500-231,500', '€231,500 and above']} 
                 onSelectOption={(response) => saveUserResponse('income', response)} 
-                />
+            />
 
             <SurveyQuestionBox
                 question="What is your current marital status?"
@@ -164,30 +164,26 @@ const SurveyScreen: React.FC = () => {
                 options={['Morning person', 'Evening person']}
                 onSelectOption={(response) => saveUserResponse('morning_person', response)}
             />
-            <SurveyQuestionBox
+            <SurveyNumericQuestionBox
                 question="How much sleep do you lose because of your partner's sleep problems? (minutes)"
-                options={['None', '1-15 minutes', '16-30 minutes', '31-45 minutes', '46-60 minutes', '60+ minutes']}
-                onSelectOption={(response) => saveUserResponse('sleep_lost', response)}
+                onEnterValue={(response) => saveUserResponse('sleep_lost', response)}
             />
-            <SurveyQuestionBox
+            <SurveyNumericQuestionBox
                 question="How many hours of sleep do you need to function your best during the day?"
-                options={['<4 hours', '4-5 hours', '6 hours', '7 hours', '8 hours', '9 hours', '10 hours', '11 hours', '12+ hours']}
-                onSelectOption={(response) => saveUserResponse('sleep_needed', response)}
+                onEnterValue={(response) => saveUserResponse('sleep_needed', response)}
             />
             <SurveyQuestionBox
                 question="Most nights do you sleep …"
                 options={['Alone', 'With your significant other', 'With your children', 'With a pet', 'Multiple (E.G. Partner and pet, partner and children, etc.)']}
                 onSelectOption={(response) => saveUserResponse('sleep_partner', response)}
             />
-            <SurveyQuestionBox
+            <SurveyNumericQuestionBox
                 question="How many hours of sleep do you get per night on workdays?"
-                options={['<4 hours', '4-5 hours', '6 hours', '7 hours', '8 hours', '9 hours', '10 hours', '11 hours', '12+ hours']}
-                onSelectOption={(response) => saveUserResponse('sleep_time_workday', response)}
+                onEnterValue={(response) => saveUserResponse('sleep_time_workday', response)}
             />
-            <SurveyQuestionBox
+            <SurveyNumericQuestionBox
                 question="How many hours of sleep do you get per night on weekends/days off?"
-                options={['<4 hours', '4-5 hours', '6 hours', '7 hours', '8 hours', '9 hours', '10 hours', '11 hours', '12+ hours']}
-                onSelectOption={(response) => saveUserResponse('sleep_time_weekend', response)}
+                onEnterValue={(response) => saveUserResponse('sleep_time_weekend', response)}
             />
             <SurveyQuestionBox
                 question="Approximately what time would you wake up if you were free to plan your day?"
@@ -204,10 +200,9 @@ const SurveyScreen: React.FC = () => {
                 options={['<15 minutes', '15-30 minutes', '30-45 minutes', '45-60 minutes', '60+ minutes', 'Don\'t know', 'Rarely nap, hard to say']}
                 onSelectOption={(response) => saveUserResponse('nap_duration', response)}
             />
-            <SurveyQuestionBox
+            <SurveyNumericQuestionBox
                 question="On average, how many times do you wake up during the night?"
-                options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10+']}
-                onSelectOption={(response) => saveUserResponse('wake_ups', response)}
+                onEnterValue={(response) => saveUserResponse('wake_ups', response)}
             />
             <SurveyQuestionBox
                 question="Does noise or light awaken you during the night?"
@@ -250,6 +245,11 @@ const SurveyScreen: React.FC = () => {
                 question="If you are female, do you or your doctor think that..."
                 options={['You may be going through peri-menopause (you have changes in your periods but have not gone 12 months in a row without a period)', 'You are postmenopausal', 'Neither/None of the above']}
                 onSelectOption={(response) => saveUserResponse('menopause', response)}
+            />
+            <SurveyQuestionBox
+                question="How many weeks pregnant are you? (If you are not pregnant, please select 'None of the above')"
+                options={['12 weeks or less (1-3 months)', '13-27 weeks (4-6 months)', '28 or more weeks (7 months or more)', 'None of the above']}
+                onSelectOption={(response) => saveUserResponse('recent_births', response)}
             />
             <SurveyQuestionBox
                 question="If you are female, which of the following statements describes you?"
