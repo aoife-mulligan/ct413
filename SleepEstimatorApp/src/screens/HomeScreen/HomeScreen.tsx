@@ -9,6 +9,7 @@ import SurveyQuestionBox from '../../components/SurveyQuestionBox.tsx';
 import LogDataBox from '../../components/LogDataBox/LogDataBox.tsx';
 import { useAuth } from '../../components/hooks/AuthContext';
 import PredictionDisplay from '../../components/PredictionDisplay/PredictionDisplay.tsx';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const HomeScreen: React.FC = () => {
     const navigation = useNavigation();
@@ -24,53 +25,49 @@ const HomeScreen: React.FC = () => {
             return;
         }
 
-        const fetchUsername = async () => {
-            const currentUserUID = user.uid;
-            const userDocRef = firestore().collection('users').doc(currentUserUID);
-            
-            try {
-                const doc = await userDocRef.get();
-                if (doc.exists) {
-                    const userData = doc.data();
-                    if(userData) {
-                        console.log("Setting username to: ", userData.username);
-                        setUsername(userData.username);
-                    } else {
-                        console.log("Document data is undefined.");
-                    }
+        const unsubscribeFromUserUpdates = firestore()
+        .collection('users')
+        .doc(user.uid)
+        .onSnapshot(doc => {
+            if (doc.exists) {
+                const userData = doc.data();
+                if(userData) {
+                    console.log("Setting username to: ", userData.username);
+                    setUsername(userData.username);
                 } else {
-                    console.log("No such document!");
+                    console.log("Document data is undefined.");
                 }
-            } catch (error) {
-                console.error("Error getting document:", error);
+            } else {
+                console.log("No such document!");
             }
-        };
+        }, error => {
+            console.error("Error getting document:", error);
+        });
 
-        fetchUsername();
-        const fetchPrediction = async () => {
-            const predictionDocRef = firestore().collection('predictions').doc(user.uid);
-            
-            try {
-                const doc = await predictionDocRef.get();
-                if (doc.exists) {
-                    const predictionData = doc.data();
-                    const predictionValue = predictionData?.predictionValue ?? null;
-                    setPrediction(predictionValue);
-                } else {
-                    console.log("No prediction document found for the user.");
-                }
-            } catch (error) {
-                console.error("Error getting prediction document:", error);
+        const unsubscribeFromPredictionUpdates = firestore()
+        .collection('predictions')
+        .doc(user.uid)
+        .onSnapshot(doc => {
+            if (doc.exists) {
+                const predictionData = doc.data();
+                setPrediction(predictionData?.predictionValue ?? null);
+            } else {
+                console.log("No prediction document found for the user.");
             }
-        };
+        }, error => {
+            console.error("Error getting prediction document:", error);
+        });
 
-        fetchPrediction();
-    }, [user, navigation]);
+        return () => {
+            unsubscribeFromUserUpdates();
+            unsubscribeFromPredictionUpdates();
+        };
+        
+        }, [user, navigation]);
 
     const db = firestore();
 
     const onSignOutPressed = () => {
-        console.warn('Sign Out Pressed!');
         auth()
             .signOut()
             .then(() => {
@@ -81,7 +78,6 @@ const HomeScreen: React.FC = () => {
     }
 
     const onCompleteSurveyPressed = () => {
-        console.warn('Complete Survey Pressed!');
         navigation.navigate('SurveyScreen');
     }
 
@@ -97,10 +93,13 @@ const HomeScreen: React.FC = () => {
     };
 
     const onGeneratePredictionPressed = () => {
-        console.warn('Generate Prediction Pressed!');
         navigation.navigate('GeneratePredictionScreen');
     };
 
+    const onAccountPressed = () => {
+        navigation.navigate('AccountScreen');
+    };
+    
     const saveUserResponse = (fieldName: string, fieldValue: string) => {
         const currentUserUID = auth().currentUser?.uid;
     
@@ -129,23 +128,35 @@ const HomeScreen: React.FC = () => {
                 text="Log Today's Data"
                 onPress={onLogDataPressed}
                 type="PRIMARY"
+                icon={<Icon name="checkbox-marked-circle-plus-outline" size={20} color="#FBFBF2" />}
             />
             
             <CustomButton
                 text="Complete Survey"
                 onPress={onCompleteSurveyPressed}
                 type="PRIMARY"
+                icon={<Icon name="checkbox-marked-circle-plus-outline" size={20} color="#FBFBF2" />}
             />
             <CustomButton
                 text="Your Sleep Quality Prediction"
                 onPress={onGeneratePredictionPressed}
                 type="PRIMARY"
+                icon={<Icon name="chat-sleep-outline" size={20} color="#FBFBF2" />}
+
             />
 
             <CustomButton 
                 text="Sign Out" 
                 onPress={onSignOutPressed}
                 type="SECONDARY"
+                icon={<Icon name="logout" size={20} color="#8B88F8" />}
+            />
+
+            <CustomButton 
+                text="Account Profile" 
+                onPress={onAccountPressed}
+                type="SECONDARY"
+                icon={<Icon name="account" size={20} color="#8B88F8" />}
             />
         </ScrollView>
     );

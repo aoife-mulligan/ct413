@@ -133,8 +133,6 @@ const SignUpScreen: React.FC = () => {
                     icon={<Icon name="account-plus" size={20} color="#FBFBF2" />}
                 />
 
-                <SocialSignInButtons />
-
                 <Text style={styles.text}>
                     By creating an account, you agree{"\n"} to our{'  '}
                     <Text style={styles.link} onPress={onTermsOfServicePress}>Terms of Service</Text> and{'  '}

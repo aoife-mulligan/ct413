@@ -8,6 +8,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+
 const SignInScreen: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -16,8 +17,6 @@ const SignInScreen: React.FC = () => {
     const navigation = useNavigation();
 
     const onSignInPressed = () => {
-
-        console.warn('Sign In Pressed!');
 
         if (!password && !email) {
             ToastAndroid.show('Please fill out all fields', ToastAndroid.LONG);
@@ -37,12 +36,10 @@ const SignInScreen: React.FC = () => {
     }
 
     const forgotPasswordPressed = () => {
-        console.warn('Forgot Password Pressed!');
         navigation.navigate('ForgotPassword');
     }
 
     const onSignUpPressed = () => {
-        console.warn('Sign Up Pressed!');
         navigation.navigate('SignUp');
     }
 
@@ -84,7 +81,7 @@ const SignInScreen: React.FC = () => {
                 />
                 */}
 
-                <SocialSignInButton />
+                {/*<SocialSignInButton />*/}
 
                 <CustomButton 
                     text="Don't have an account? Create one!" 

@@ -19,9 +19,26 @@ import LogDataScreen from '../screens/LogDataScreen/LogDataScreen';
 import { useAuth } from '../components/hooks/AuthContext';
 import GeneratePredictionScreen from '../screens/GeneratePredictionScreen/GeneratePredictionScreen';
 import ReccommendationsScreen from '../screens/ReccommendationsScreen';
+import AccountScreen from '../screens/AccountScreen';
 
 
 enableScreens();
+
+type RootStackParamList = {
+    Home: undefined;
+    SurveyScreen: undefined;
+    LogDataScreen: undefined;
+    GeneratePredictionScreen: undefined;
+    ReccommendationsScreen: undefined;
+    AccountScreen: undefined;
+    SignIn: undefined;
+    SignUp: undefined;
+    ConfirmEmail: undefined;
+    ForgotPassword: undefined;
+    ResetPassword: undefined;
+    PrivacyPolicy: undefined;
+    TermsOfService:undefined;
+}
 
 const Stack = createStackNavigator();
 
@@ -29,7 +46,7 @@ const Navigation: React.FC = () => {
     const { user } = useAuth();
     return (
         <Stack.Navigator
-            initialRouteName={user ? "SignIn" : "SignIn"}
+            initialRouteName={user ? "Home" : "SignIn"}
             screenOptions={{
                 headerShown: false,
                 cardStyle: { backgroundColor: '#262626' },
@@ -43,7 +60,7 @@ const Navigation: React.FC = () => {
                     <Stack.Screen name="LogDataScreen" component={LogDataScreen} />
                     <Stack.Screen name="GeneratePredictionScreen" component={GeneratePredictionScreen} />
                     <Stack.Screen name="ReccommendationsScreen" component={ReccommendationsScreen} />
-                    {/* Add other screens that should be accessible after sign in */}
+                    <Stack.Screen name="AccountScreen" component={AccountScreen} />
                 </>
             ) : (
                 <>

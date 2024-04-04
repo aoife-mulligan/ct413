@@ -93,6 +93,8 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 100,
         marginTop: 10,
+        width: '50%',
+        alignSelf: 'center',
     },
     submitButtonText: {
         textAlign: 'center',

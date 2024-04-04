@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 interface CustomButtonProps {
     text: string;
     onPress: () => void;
-    type?: 'PRIMARY' | 'SECONDARY' | 'TERTIARY';
+    type?: 'PRIMARY' | 'SECONDARY' | 'TERTIARY' | 'DELETE';
     bgColor?: string;
     fgColor?: string;
     icon?: JSX.Element;
@@ -66,6 +66,12 @@ const styles = StyleSheet.create({
         width: '70%',
         padding: 15,
     },
+    container_DELETE: {
+        width: '80%',
+        padding: 15,
+        borderColor: '#FF0000',
+        borderWidth: 2,
+    },
 
     text_PRIMARY: {
         color: '#FBFBF2',
@@ -77,6 +83,9 @@ const styles = StyleSheet.create({
         color: '#FBFBF2',
         fontWeight: 'normal',
         textAlign: 'center',
+    },
+    text_DELETE: {
+        color: '#FF0000',
     },
 });
 

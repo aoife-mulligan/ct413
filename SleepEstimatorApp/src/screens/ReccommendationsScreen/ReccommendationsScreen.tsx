@@ -5,6 +5,7 @@ import { useAuth } from '../../components/hooks/AuthContext';
 import CustomButton from '../../components/CustomButton';
 import navigation from '../../navigation';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface SurveyResponses {
     [question: string]: string;
@@ -156,8 +157,10 @@ const ReccommendationsScreen: React.FC = () => {
                     
                     
                     <CustomButton 
-                        text="Back" 
-                        onPress={() => navigation.navigate('Home')} 
+                        text="Home" 
+                        onPress={() => navigation.navigate('Home')}
+                        type='PRIMARY'
+                        icon={<Icon name="home" size={20} color="#FBFBF2" />}
                     />
                 </View>
             }

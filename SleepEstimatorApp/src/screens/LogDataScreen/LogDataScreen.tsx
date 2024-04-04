@@ -155,12 +155,7 @@ return (
         icon={<Icon name="home" size={20} color="#FBFBF2" />}
     />
 
-    <CustomButton
-    text="Sign Out"
-    onPress={() => auth().signOut().then(() => navigation.navigate('SignIn'))}
-    type="SECONDARY"
-    icon={<Icon name="logout" size={20} color="#8B88F8" />}
-    />
+    <Text />
 </ScrollView>
 );
 };

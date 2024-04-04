@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore'; // Import Firestore
 import SurveyQuestionBox from '../../components/SurveyQuestionBox.tsx';
 import { useAuth } from '../../components/hooks/AuthContext';
 import SurveyNumericQuestionBox from '../../components/SurveyNumericQuestionBox.tsx';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = {
     email: string;
@@ -42,12 +43,17 @@ const SurveyScreen: React.FC = () => {
         const currentUserUID = auth().currentUser?.uid;
     
         if (currentUserUID) {
-            db.collection('surveyresponses').add({
+            // doc id is user id and question
+            const docId = `${currentUserUID}_${question}`;
+            
+            // if question for user does not exist, create a new document
+            db.collection('surveyresponses').doc(docId).set({
                 userId: currentUserUID,
                 question: question,
                 response: response,
                 createdAt: firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            }, { merge: true })
+            .then(() => {
                 console.log(`Response to "${question}" saved successfully!`);
             }).catch((error) => {
                 console.error(`Error saving response to "${question}":`, error);
@@ -56,6 +62,7 @@ const SurveyScreen: React.FC = () => {
             console.error('Current user UID is not available.');
         }
     };
+    
     
 
     function onBackToHomePressed(): void {
@@ -187,7 +194,7 @@ const SurveyScreen: React.FC = () => {
             />
             <SurveyQuestionBox
                 question="Approximately what time would you wake up if you were free to plan your day?"
-                options={['After 1PM', '5-6AM', '6-7AM', '7-8AM', '8-9AM', '9-10AM', '10-11AM', '11AM-Noon', 'Noon-1PM', 'After 1PM']}
+                options={['5-6AM', '6-7AM', '7-8AM', '8-9AM', '9-10AM', '10-11AM', '11AM-Noon', 'Noon-1PM', 'After 1PM']}
                 onSelectOption={(response) => saveUserResponse('wake_up_choices', response)}
             />
             <SurveyQuestionBox
@@ -257,17 +264,17 @@ const SurveyScreen: React.FC = () => {
                 onSelectOption={(response) => saveUserResponse('recent_births', response)}
             />
 
+            <Text />
+            
             <CustomButton
                 text="Back to Home"
                 onPress={onBackToHomePressed}
                 type="PRIMARY"
+                icon={<Icon name="home" size={20} color="#FBFBF2" />}
             />
 
-            <CustomButton 
-                text="Sign Out" 
-                onPress={onSignOutPressed}
-                type="SECONDARY"
-            />
+            <Text />
+            <Text />
         </ScrollView>
     );
 };
