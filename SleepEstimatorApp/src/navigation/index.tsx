@@ -66,8 +66,6 @@ const Navigation: React.FC = () => {
                 <>
                     <Stack.Screen name="SignIn" component={SignInScreen} />
                     <Stack.Screen name="SignUp" component={SignUpScreen} />
-                    <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
-                    <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
                     <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
                     <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
                     <Stack.Screen name="TermsOfService" component={TermsOfService} />
